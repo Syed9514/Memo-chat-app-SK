@@ -5,6 +5,10 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+             
+            fontFamily: {
+              'pacifico': ['"Pacifico"', 'cursive'],
+            },
             // Add these properties for the slide-up animation
             keyframes: {
               "slide-up": {

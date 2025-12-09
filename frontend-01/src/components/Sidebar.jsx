@@ -56,7 +56,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
       `}
 		>
 			{/* --- 1. HEADER --- */}
-			<div className='flex items-center justify-between p-5'>
+			<div className='flex items-center justify-between p-6'>
 				<MemoLogo />
 				<ThemeToggle />
 			</div>
