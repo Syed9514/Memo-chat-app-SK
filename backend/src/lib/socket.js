@@ -7,7 +7,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
 	cors: {
-		origin: ["http://localhost:5173","http://10.212.44.205","http://192.168.43.219"],
+		origin: ["http://localhost:5173","https://memo-chat-sk.netlify.app","http://10.212.44.205","http://192.168.43.219"],
 		methods: ["GET", "POST"],
 	},
 });

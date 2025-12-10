@@ -24,7 +24,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://10.212.44.205", "http://192.168.43.219"],
+    origin: ["http://localhost:5173", "https://memo-chat-sk.netlify.app", "http://10.212.44.205", "http://192.168.43.219"],
     credentials: true,
   })
 );
