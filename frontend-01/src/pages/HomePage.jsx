@@ -26,7 +26,7 @@ const HomePage = () => {
 	// }, []);
 
 	return (
-		<div className='flex h-screen overflow-hidden'>
+		<div className='flex h-[100dvh] overflow-hidden'>
 			{/* Overlay for mobile view to close the sidebar */}
 			{isSidebarOpen && (
 				<div
