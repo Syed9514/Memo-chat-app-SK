@@ -17,6 +17,16 @@ export const useChatStore = create((set, get) => ({
     try {
       const res = await axiosInstance.get("/messages/users");
       set({ users: res.data });
+
+      // Initialize unread messages from backend counts
+      const unreadMap = {};
+      res.data.forEach(user => {
+        if (user.unreadCount > 0) {
+          unreadMap[user._id] = user.unreadCount;
+        }
+      });
+      set({ unreadMessages: unreadMap });
+
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to get users");
     } finally {
@@ -46,75 +56,85 @@ export const useChatStore = create((set, get) => ({
   },
 
   subscribeToMessages: () => {
-		const socket = useAuthStore.getState().socket;
-		if (!socket) return;
+    const socket = useAuthStore.getState().socket;
+    if (!socket) return;
 
-		socket.off("newMessage"); // Remove old listener to prevent duplicates
+    socket.off("newMessage"); // Remove old listener to prevent duplicates
     socket.off("typing");
-		socket.off("stop_typing");
+    socket.off("stop_typing");
 
-		// MODIFIED: This function now handles unread messages
-		socket.on("newMessage", (newMessage) => {
+    // MODIFIED: This function now handles unread messages
+    socket.on("newMessage", (newMessage) => {
       console.log("NEW MESSAGE RECEIVED, INSPECT THIS OBJECT:", newMessage);
-			const { selectedUser, messages } = get();
-			const isMessageFromSelectedUser = newMessage.senderId === selectedUser?._id;
+      const { selectedUser, messages } = get();
+      const isMessageFromSelectedUser = newMessage.senderId === selectedUser?._id;
 
-			if (isMessageFromSelectedUser) {
-				// User is already viewing this chat, add message directly
-				set({ messages: [...messages, newMessage], isTyping: false });
-			} else {
-				// It's from another user, mark as unread
-				toast.success(`New message from another user!`); // Optional: notify user
-				set((state) => {
-					const newUnread = {
-						...state.unreadMessages,
-						[newMessage.senderId]: (state.unreadMessages[newMessage.senderId] || 0) + 1,
-					};
+      if (isMessageFromSelectedUser) {
+        // User is already viewing this chat, add message directly
+        set({ messages: [...messages, newMessage], isTyping: false });
+      } else {
+        // It's from another user, mark as unread
+        toast.success(`New message from another user!`); // Optional: notify user
+        set((state) => {
+          const newUnread = {
+            ...state.unreadMessages,
+            [newMessage.senderId]: (state.unreadMessages[newMessage.senderId] || 0) + 1,
+          };
 
-					// --- ADD THIS LOG ---
-					console.log("UNREAD MESSAGES STATE UPDATED:", newUnread);
-					
-					return { unreadMessages: newUnread };
-				});
-			}
-		});
+          // --- ADD THIS LOG ---
+          console.log("UNREAD MESSAGES STATE UPDATED:", newUnread);
+
+          return { unreadMessages: newUnread };
+        });
+      }
+    });
 
     // Listen for *who* is typing
-		socket.on("typing", (senderId) => {
+    socket.on("typing", (senderId) => {
       console.log("Typing event HEARD from sender:", senderId);
-			const { selectedUser } = get();
+      const { selectedUser } = get();
       console.log("Currently selected user:", selectedUser?._id);
-			// Only show typing if it's from the selected user
-			if (senderId === selectedUser?._id) {
-				set({ isTyping: true });
-			}
-		});
+      // Only show typing if it's from the selected user
+      if (senderId === selectedUser?._id) {
+        set({ isTyping: true });
+      }
+    });
 
-		socket.on("stop_typing", () => {
+    socket.on("stop_typing", () => {
       console.log("Stop_typing event HEARD");
-			set({ isTyping: false });
-		});
+      set({ isTyping: false });
+    });
 
-	},
+  },
 
   unsubscribeFromMessages: () => {
     const socket = useAuthStore.getState().socket;
     if (socket) {
-			socket.off("newMessage");
+      socket.off("newMessage");
       socket.off("typing");
-			socket.off("stop_typing");
-		}
+      socket.off("stop_typing");
+    }
   },
 
-  setSelectedUser: (selectedUser) => {
-		set((state) => {
-			// Create a copy of unreadMessages
-			const newUnreadMessages = { ...state.unreadMessages };
-			if (selectedUser) {
-				// Remove the selected user's ID from unread list
-				delete newUnreadMessages[selectedUser._id];
-			}
-			return { selectedUser, unreadMessages: newUnreadMessages, isTyping: false };
-		});
-	},
+  setSelectedUser: async (selectedUser) => {
+    set({ selectedUser });
+
+    if (selectedUser) {
+      // Optimistically update UI
+      set((state) => {
+        const newUnreadMessages = { ...state.unreadMessages };
+        delete newUnreadMessages[selectedUser._id];
+        return { unreadMessages: newUnreadMessages, isTyping: false };
+      });
+
+      // Persist to backend
+      try {
+        await axiosInstance.put(`/messages/mark-read/${selectedUser._id}`);
+      } catch (error) {
+        console.error("Failed to mark messages as read:", error);
+      }
+    } else {
+      set({ isTyping: false });
+    }
+  },
 }));
