@@ -4,6 +4,7 @@ import { useAuthStore } from "../store/useAuthStore";
 import { Star, X, Image as ImageIcon } from "lucide-react";
 import ImageModal from "./ImageModal";
 // import Avatar from "./Avatar";
+import Avatar from "./Avatar";
 
 const ChatDetailsPanel = ({ onClose }) => {
   const { selectedUser, messages } = useChatStore();
@@ -40,7 +41,7 @@ const ChatDetailsPanel = ({ onClose }) => {
         className='fixed inset-0 z-40 bg-black/50 md:hidden'
         onClick={onClose}
       />
-      
+
       {/* Panel Container */}
       <div
         className='
@@ -60,23 +61,20 @@ const ChatDetailsPanel = ({ onClose }) => {
 
         {/* Content Scroll Area */}
         <div className='flex-1 p-4 space-y-6 overflow-y-auto no-scrollbar'>
-          
+
           {/* --- 2. PROFILE GLASS CARD --- */}
           <div className="bg-base-100/50 rounded-3xl p-6 flex flex-col items-center border border-base-300/50 shadow-sm">
             <div className='avatar'>
               {/* UPDATED: Changed ring-primary to ring-[#a1c4fd] */}
               <div className='w-24 rounded-full ring ring-[#a1c4fd] ring-offset-base-100 ring-offset-2'>
-                <img
-                  src={selectedUser.profilePic || "/avatar.png"}
-                  alt={selectedUser.fullName}
-                />
+                <Avatar user={selectedUser} size="size-24" />
               </div>
             </div>
-            
+
             <div className='flex items-center gap-2 mb-2'>
               <h3 className='font-bold text-xl'>{selectedUser.fullName}</h3>
               {/* Favorite Toggle */}
-              <button 
+              <button
                 onClick={handleToggleFavorite}
                 className={`btn btn-ghost btn-circle btn-sm transition-all ${isFavorite ? "text-yellow-400" : "text-base-content/40 hover:text-yellow-400"}`}
               >
@@ -89,16 +87,16 @@ const ChatDetailsPanel = ({ onClose }) => {
                 {selectedUser.bio}
               </p>
             )}
-            
+
             {/* Removed "Active Now" badge as requested */}
           </div>
 
           {/* --- 3. SHARED MEDIA SECTION --- */}
           <div>
             <div className="flex items-center gap-2 mb-3 px-2">
-                <ImageIcon className="size-4 text-base-content/60" />
-                <h3 className='font-semibold text-sm text-base-content/80'>Shared Media</h3>
-                <span className="text-xs text-base-content/40 ml-auto">{sharedMedia.length} photos</span>
+              <ImageIcon className="size-4 text-base-content/60" />
+              <h3 className='font-semibold text-sm text-base-content/80'>Shared Media</h3>
+              <span className="text-xs text-base-content/40 ml-auto">{sharedMedia.length} photos</span>
             </div>
 
             {sharedMedia.length > 0 ? (
@@ -129,7 +127,7 @@ const ChatDetailsPanel = ({ onClose }) => {
       </div>
 
       {/* Image Modal */}
-      <ImageModal 
+      <ImageModal
         isOpen={selectedImgIndex !== null}
         onClose={closeImageModal}
         imageSrc={selectedImgIndex !== null ? sharedMedia[selectedImgIndex]?.image : null}

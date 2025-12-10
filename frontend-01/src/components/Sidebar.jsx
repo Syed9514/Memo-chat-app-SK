@@ -81,9 +81,9 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
 					<button
 						className={`
 							flex-1 btn btn-sm rounded-full normal-case border-none transition-all duration-300
-							${filter === "all" 
-							? "text-[#374151] shadow-lg shadow-[#a1c4fd]/20" // UPDATED: Dark text + colored shadow
-							: "bg-base-200 text-base-content/60 hover:bg-base-300"}
+							${filter === "all"
+								? "text-[#374151] shadow-lg shadow-[#a1c4fd]/20" // UPDATED: Dark text + colored shadow
+								: "bg-base-200 text-base-content/60 hover:bg-base-300"}
 						`}
 						// ADD THIS STYLE PROP:
 						style={{ background: filter === "all" ? "linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)" : "" }}
@@ -94,9 +94,9 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
 					<button
 						className={`
 							flex-1 btn btn-sm rounded-full normal-case border-none transition-all duration-300
-							${filter === "favorites" 
-							? "text-[#374151] shadow-lg shadow-[#a1c4fd]/20" 
-							: "bg-base-200 text-base-content/60 hover:bg-base-300"}
+							${filter === "favorites"
+								? "text-[#374151] shadow-lg shadow-[#a1c4fd]/20"
+								: "bg-base-200 text-base-content/60 hover:bg-base-300"}
 						`}
 						style={{ background: filter === "favorites" ? "linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)" : "" }}
 						onClick={() => setFilter("favorites")}
@@ -109,7 +109,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
 			{/* --- 4. CONTACT LIST --- */}
 			<div className='flex-1 overflow-y-auto px-3 py-2 space-y-1'>
 				{isUsersLoading && <SidebarSkeleton />}
-				
+
 				{!isUsersLoading && filteredUsers.length === 0 && (
 					<div className="flex flex-col items-center justify-center h-full text-base-content/40 pb-10">
 						<p className="text-sm">No users found</p>
@@ -127,9 +127,9 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
 								onClick={() => handleSelectUser(user)}
 								className={`
                   w-full p-3 flex items-center gap-3 rounded-2xl cursor-pointer transition-all duration-200 group
-                  ${selectedUser?._id === user._id 
-                    ? "bg-[#a1c4fd]/10 ring-1 ring-[#a1c4fd]/20" 
-                    : "hover:bg-base-200/50"}
+                  ${selectedUser?._id === user._id
+										? "bg-[#a1c4fd]/10 ring-1 ring-[#a1c4fd]/20"
+										: "hover:bg-base-200/50"}
                 `}
 							>
 								<div className="relative">
@@ -159,9 +159,9 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
 
 			{/* --- 5. FOOTER (Updated to match List Item Size) --- */}
 			{/* Changed p-4 to px-3 py-3 to align width with list items */}
-			<div className='px-3 py-3 mt-auto'> 
+			<div className='px-3 py-3 mt-auto'>
 				<div className='p-3 rounded-2xl bg-base-200/50 border border-base-300/50 flex items-center gap-3 transition-all hover:bg-base-200/80 group cursor-pointer' onClick={() => setIsSettingsOpen(true)}>
-					
+
 					{/* Avatar matches list size (size-12) */}
 					<div className="relative transition-transform duration-300 group-hover:scale-105">
 						<Avatar user={authUser} size="size-12" />
@@ -177,8 +177,8 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
 					</div>
 
 					{/* Settings button acts as the 'end' action */}
-					<button 
-						className='btn btn-ghost btn-sm btn-circle text-base-content/60 group-hover:text-primary group-hover:bg-primary/10 transition-colors' 
+					<button
+						className='btn btn-ghost btn-sm btn-circle text-base-content/60 group-hover:text-primary group-hover:bg-primary/10 transition-colors'
 					>
 						<Settings className="size-5" />
 					</button>

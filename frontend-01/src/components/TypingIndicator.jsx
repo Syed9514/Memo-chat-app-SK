@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useChatStore } from "../store/useChatStore";
+import Avatar from "./Avatar";
 
 const TypingIndicator = () => {
   const { selectedUser } = useChatStore();
@@ -13,13 +14,7 @@ const TypingIndicator = () => {
       transition={{ duration: 0.3 }}
     >
       <div className="chat-image avatar">
-        <div className="size-10 rounded-full overflow-hidden">
-          <img
-            src={selectedUser?.profilePic || "/avatar.png"}
-            alt="User Avatar"
-            className="object-cover w-full h-full"
-          />
-        </div>
+        <Avatar user={selectedUser} size="size-10 !flex" />
       </div>
 
       <div className="chat-bubble bg-base-200 p-4 flex items-center gap-1.5">

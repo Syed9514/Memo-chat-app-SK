@@ -1,6 +1,7 @@
 import { Info, MessageSquare, X } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useChatStore } from "../store/useChatStore";
+import Avatar from "./Avatar";
 
 const ChatHeader = ({ setIsSidebarOpen, setIsDetailsPanelOpen }) => {
 	const { selectedUser, setSelectedUser } = useChatStore();
@@ -19,12 +20,7 @@ const ChatHeader = ({ setIsSidebarOpen, setIsDetailsPanelOpen }) => {
 					{selectedUser && (
 						<>
 							<div className='avatar'>
-								<div className='size-10 rounded-full relative'>
-									<img
-										src={selectedUser.profilePic || "/avatar.png"}
-										alt={selectedUser.fullName}
-									/>
-								</div>
+								<Avatar user={selectedUser} size="size-10 !flex" />
 							</div>
 
 							<div>
